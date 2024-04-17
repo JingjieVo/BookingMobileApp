@@ -1,0 +1,13 @@
+- Tạo ticket cho một chuyến xe (coach) thì số lượng vé = số lượng ghế mà xe (coach) có
+- Sau giờ khởi hành của một chuyến xe, thì mọi vé chưa được mua của chuyến đó sẽ biến mất (ticketStatus -> true)
+(bookingHistory là vé của user sau khi đặt xong, tức là sau khi user đặt xong thì tạo 1 collection bookingHistory mới, khi người dùng 
+bấm vào coi vé thì dùng user id để lấy các vé mà user đã đặt theo thứ tự thời gian đặt)
+- Sau khi hoàn thành một chuyến đi (tức là sẽ rảnh) -> cập nhật lại coachStatus, chỗ này mình dựa vào estimatedTime(thời 
+gian ước tính hoàn thành chuyến đi) để kiểu chuyến xe xuất ở thời gian A thì đến A + estimatedTime thì tự cập nhật lại status
+- phần thanh toán vé (có lẽ sẽ xài momo, sử dụng momo-qr-generator) api trả về oke thì thêm vào bookingHistory cho user.
+- tìm kiếm chuyến xe sẽ tìm kiếm gồm các thông tin :ngày đi, điểm đi, điểm đến (những thông tin này có trong danh sách ticket), không
+có vé thì hiện không có
+- cân nhắc thêm phần tin tức hoặc ưu đãi,
+ok phần logic rồi
+Giao diện:
+cho phép chọn ghế, 
