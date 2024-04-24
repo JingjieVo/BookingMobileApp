@@ -30,7 +30,7 @@ const tripSchema = new mongoose.Schema({
     ref: 'Coach'
   },
   estimatedTime: { // Ước lượng thời gian cho chuyến xe
-    type: String,
+    type: Number,
     required: true
   },
   tripPrice: {

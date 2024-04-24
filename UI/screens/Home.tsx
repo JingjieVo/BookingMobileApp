@@ -6,7 +6,7 @@ import { Text, View } from 'react-native';
 function Home() {
   return (
     <View>
-        <Text> abc</Text>
+        <Text>pro</Text>
     </View>
   );
 }

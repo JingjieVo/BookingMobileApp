@@ -1,12 +1,12 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Homescreen from './Search';
-import Searchscreen from './Home';
+import Homescreen from './Home';
+import Searchscreen from './Search';
 import MyTicketsscreen from './MyTickets';
 import Profilescreen from './Profile';
 
 import { NavigationContainer } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { AccessibilityInfo, Animated, Easing, StyleSheet } from "react-native";
+import { AccessibilityInfo, Animated, Easing, StyleSheet, Text, View } from "react-native";
 import { SetStateAction, useEffect, useRef, useState } from "react";
 const Tab = createBottomTabNavigator();
 
@@ -39,9 +39,10 @@ function Main() {
           options={{
             tabBarShowLabel: false,
             tabBarIcon: ({focused}) => (
-              <Animated.View>
-                <Icon name="home"  color="lightgray" style={focused ? styles.focusedTab : styles.unfocusedTab } />
-              </Animated.View>  
+              <View>
+                <Icon name="home" color="lightgray" style={[focused ? styles.focusedTab : styles.unfocusedTab]} />
+                <Text style={focused ? styles.focusedText : styles.unfocusedText}>News</Text>
+              </View>
             ) 
           }}
         />
@@ -50,7 +51,11 @@ function Main() {
             tabBarShowLabel: false,
             //tabBarLabel: 'SearchTrip',
             tabBarIcon: ({color, focused}) => (
-              <Icon name="search" color="lightgray" style={[focused ? styles.focusedTab : styles.unfocusedTab]} />
+              <View>
+                <Icon name="search" color="lightgray" style={[focused ? styles.focusedTab : styles.unfocusedTab]} />
+                <Text style={focused ? styles.focusedText : styles.unfocusedText}>Trips</Text>
+
+              </View>
             ) 
           }}
         />
@@ -59,7 +64,10 @@ function Main() {
             tabBarShowLabel: false,
             //tabBarLabel: 'My Tickets',
             tabBarIcon: ({color, focused}) => (
-              <Icon name="ticket" color="lightgray" style={focused ? styles.focusedTab : styles.unfocusedTab} />
+              <View>
+                <Icon name="ticket" color="lightgray" style={focused ? styles.focusedTab : styles.unfocusedTab} />
+                <Text style={focused ? styles.focusedText : styles.unfocusedText}>My tickets</Text>
+              </View>
             ) 
           }}
         />
@@ -68,7 +76,10 @@ function Main() {
             tabBarShowLabel: false,
             //tabBarLabel: 'Me',
             tabBarIcon: ({color, focused}) => (
-                <Icon  name="user" color="lightgray" style={focused ? styles.focusedTab : styles.unfocusedTab } />
+                <View>
+                  <Icon name="user-o" color="lightgray" style={focused ? styles.focusedTab : styles.unfocusedTab} />
+                  <Text style={focused ? styles.focusedText : styles.unfocusedText}>Account</Text>
+                </View>
             ) 
           }}
         />
@@ -78,25 +89,26 @@ function Main() {
 
 const styles = StyleSheet.create({
   focusedTab: {
-    fontSize : 45,
-    backgroundColor: '#56e865',
-    color: 'white',
-    padding: 15,
-    paddingHorizontal: 20,
+    fontSize : 30,
+    color: '#56e865',
+    padding: 10,
     borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-	    width: 0,
-	    height: 0,
-    },
-    shadowOpacity: 0.29,
-    shadowRadius: 2.5,
-    elevation: 7,
+  
   },
   unfocusedTab: {
-    padding: 15,
+    padding: 10,
     borderRadius: 10,
+
     fontSize : 30,
+  },
+  focusedText: {
+    color: '#56e865',
+    fontWeight: '900',
+    alignSelf: 'center',
+  },
+  unfocusedText: {
+    alignSelf: 'center',
+    fontWeight: '600',
   }
 })
 
