@@ -9,7 +9,14 @@ import { SetStateAction, useEffect, useRef, useState } from "react";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from "./screens/Login";
 import Home from "./screens/Home";
-export type ScreenNames = ["Login", "Main"] // type these manually
+import SearchTicketResult from "./screens/SearchTicketResult";
+import Profile from "./screens/Profile";
+import Register from "./screens/Register";
+import BookTicket from "./screens/BookTicket";
+import BookingConfirm from "./screens/BookingConfirm";
+import PayForTicket from "./screens/PayForTicket";
+
+export type ScreenNames = ["Login", "Register", "Main","SearchTicketResult", "BookTicket", "BookingConfirm", "PayForTicket" ] // type these manually
 export type RootStackParamList = Record<ScreenNames[number], undefined>;
 export type StackNavigation = NavigationProp<RootStackParamList>;
 
@@ -23,8 +30,19 @@ function App() {
           headerShown: false,
         })}
       >
-        {/*<Stack.Screen name="Login" component={Login} /> */}
+        {/* */}
         <Stack.Screen name="Main" component={Main} />
+        {/* */}
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Register" component={Register} />
+        <Stack.Screen name="SearchTicketResult" component={SearchTicketResult} />
+        <Stack.Screen name="BookTicket" component={BookTicket} />
+        <Stack.Screen name="BookingConfirm" component={BookingConfirm} />
+        <Stack.Screen name="PayForTicket" component={PayForTicket} />
+
+
+
+
       </Stack.Navigator>
     </NavigationContainer>
   );

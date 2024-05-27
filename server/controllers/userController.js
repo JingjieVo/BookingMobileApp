@@ -26,10 +26,10 @@ const userController = {
     },
     // CHECK USER
     checkUser: async (req, res) => {
-        const { email, password } = req.body;
+        const { phone, password } = req.body;
       
         try {
-          const user = await User.findOne({ email });
+          const user = await User.findOne({ phone });
           if (!user) {
             return res.status(404 ).json({ message: 'User not found' });
           }
@@ -37,9 +37,8 @@ const userController = {
           if (!isValidPassword) {
             return res.status(401).json({ message: 'Invalid password' });
           } else {
-          res.status(200).json({accessToken,
-          UserInfo: user
-          });
+          res.status(200).json(user
+          );
           }
         } catch (error) {
           res.status(500).json({ message: error.message });

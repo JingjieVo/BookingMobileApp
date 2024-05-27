@@ -1,4 +1,5 @@
 const Ticket = require('../models/ticket');
+const Trip = require('../models/trip');
 
 const ticketController = {
     // ADD TICKET
@@ -34,6 +35,36 @@ const ticketController = {
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Internal server error' });
+        }
+    },
+    findTripByTicketId : async (req, res) => {
+        const ticketId = req.params.ticketId;
+        try {
+          const trip = await Trip.findOne({ tickets: ticketId }).populate('coachId').populate('driverId');
+          if (!trip) {
+            res.status(404).json({ message: 'Trip not found' });
+          }
+          res.status(200).json(trip);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    },
+    updateTicketAvailability: async (req, res) => {
+        const { tripId, ticketId, available } = req.body;
+
+        try {
+            const ticket = await Ticket.findOne({ _id: ticketId, tripId: tripId });
+            if (!ticket) {
+                return res.status(404).json({ message: 'Ticket not found' });
+            }
+
+            ticket.available = available;
+            await ticket.save();
+
+            res.status(200).json({ message: 'Ticket availability updated', ticket });
+        } catch (error) {
+            res.status(500).json({ message: error.message });
         }
     }
 };
