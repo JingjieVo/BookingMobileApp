@@ -27,7 +27,7 @@ const tripController = {
   // GET ALL TRIPS
   getAllTrips: async (req, res) => {
     try {
-      const trips = await Trip.find().populate('tickets').populate('driverId');
+      const trips = await Trip.find().populate('driverId').populate('coachId');
       res.status(200).json(trips);
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -41,15 +41,32 @@ const tripController = {
         const trips = await Trip.find({
             departure: departure,
             destination: destination,
-            date: date
-        }).populate('tickets'); // Populate thông tin của các vé trong chuyến xe
+            date: date,
+        }).populate('tickets').populate('driverId').populate('coachId'); // Populate thông tin của các vé trong chuyến xe
 
         res.status(200).json(trips);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
-}
-};
+  },
+  getTicketListOfTrip: async (req, res) => {
+    const { tripId } = req.query;
 
+    try {
+        // Tìm chuyến xe dựa trên tripId và populate thông tin của các vé trong chuyến xe
+        const trip = await Trip.findById(tripId).populate('tickets');
+        
+        if (!trip) {
+            return res.status(404).json({ message: 'Trip not found' });
+        }
+
+        // Trả về danh sách các vé của chuyến xe
+        res.status(200).json(trip.tickets);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+  }
+};
 module.exports = tripController;

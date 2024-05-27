@@ -1,4 +1,9 @@
 {
   "name": "UI",
-  "displayName": "UI"
+  "displayName": "UI",
+  "android": {
+    "config": {
+      "cleartextTraffic": true
+    }
+  }
 }

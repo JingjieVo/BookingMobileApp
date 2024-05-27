@@ -11,4 +11,5 @@ router.get('/', tripController.getAllTrips);
 // Route để tìm chuyến xe
 router.get('/search', tripController.findTripsByDepartureAndDestination)
 
+router.get('/tickets', tripController.getTicketListOfTrip)
 module.exports = router;

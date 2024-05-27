@@ -10,4 +10,12 @@ router.get('/', ticketController.getAllTickets);
 
 router.get('/available-tickets', ticketController.findAvailableTickets);
 
+router.get('/findtrip/:ticketId', ticketController.findTripByTicketId);
+
+router.put('/update-tripavailability', ticketController.findTripByTicketId);
+
+
+
+
+
 module.exports = router;

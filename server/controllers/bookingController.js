@@ -6,7 +6,7 @@ const Trip = require('../models/trip');
 const bookingController = {
     // Đặt vé
     bookTicket: async (req, res) => {
-        const { userId, guestName, identifyNumber, tripId } = req.body;
+        const {userId, guestName, identifyNumber, tripId, departureTime, date, departure, departureDescriptions, destination, destinationDescriptions, estimatedTime, arrivalTime, arrivalDate, driverName, coachLicensePlate, billId } = req.body;
     
         try {
             // Tìm chuyến xe dựa trên tripId
@@ -16,7 +16,7 @@ const bookingController = {
             }
     
             // Tìm vé chưa được mua trong chuyến xe
-            const availableTicket = await Ticket.findOne({ tripId: tripId, isBought: false});
+            const availableTicket = await Ticket.findOne({ tripId: tripId, isBought: false, available: true });
             if (!availableTicket) {
                 return res.status(400).json({ message: 'No available ticket for this trip' });
             }
@@ -37,7 +37,20 @@ const bookingController = {
                 ticket: availableTicket._id,
                 guestName: guestName,
                 identifyNumber: identifyNumber,
-                dateBooking: new Date()
+                tripId: tripId,
+                departureTime: departureTime,
+                date: date,
+                departure: departure,
+                departureDescriptions: departureDescriptions,
+                destination: destination,
+                destinationDescriptions: destinationDescriptions,
+                estimatedTime: estimatedTime,
+                arrivalTime: arrivalTime,
+                arrivalDate: arrivalDate,
+                driverName: driverName,
+                coachLicensePlate: coachLicensePlate,
+                billId: billId,
+                dateBooking: new Date(),
             });
     
             // Lưu bookingHistory vào cơ sở dữ liệu
@@ -45,7 +58,7 @@ const bookingController = {
     
             // Cập nhật trạng thái của vé (đánh dấu là đã mua)
             availableTicket.isBought = true;
-    
+            availableTicket.available = false;
             // Lưu thông tin vé đã được cập nhật
             await availableTicket.save();
     
@@ -56,7 +69,7 @@ const bookingController = {
         }
     },
     bookSpecificTicket: async (req, res) => {
-        const { userId, guestName, identifyNumber, tripId, seatCode } = req.body;
+        const { userId, guestName, identifyNumber, tripId, seatCode, departureTime, date, departure, departureDescriptions, destination, destinationDescriptions, estimatedTime, arrivalTime, arrivalDate, driverName, coachLicensePlate, billId } = req.body;
 
         try {
             // Kiểm tra xem chuyến xe tồn tại không
@@ -70,7 +83,9 @@ const bookingController = {
             if (!ticket) {
                 return res.status(404).json({ message: 'Ticket not found' });
             }
-
+            if (!ticket.available) {
+                return res.status(409).json({ message: 'This ticket with its seat is not available to book, try another seat, or book it later!' });
+            }
             if (ticket.isBought) {
                 return res.status(400).json({ message: 'This ticket has already been bought' });
             }
@@ -91,7 +106,20 @@ const bookingController = {
                 ticket: ticket._id,
                 guestName: guestName,
                 identifyNumber: identifyNumber,
-                dateBooking: new Date()
+                tripId: tripId,
+                departureTime: departureTime,
+                date: date,
+                departure: departure,
+                departureDescriptions: departureDescriptions,
+                destination: destination,
+                destinationDescriptions: destinationDescriptions,
+                estimatedTime: estimatedTime,
+                arrivalTime: arrivalTime,
+                arrivalDate: arrivalDate,
+                driverName: driverName,
+                coachLicensePlate: coachLicensePlate,
+                billId: billId,
+                dateBooking: new Date(),
             });
 
             // Lưu bookingHistory vào cơ sở dữ liệu
@@ -99,6 +127,7 @@ const bookingController = {
 
             // Cập nhật trạng thái của ticket (ví dụ: đánh dấu là đã được mua)
             ticket.isBought = true;
+            ticket.available = false;
 
             // Lưu lại thông tin ticket đã cập nhật
             await ticket.save();
