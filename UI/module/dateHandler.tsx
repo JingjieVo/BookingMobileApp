@@ -1,5 +1,8 @@
 const dateHandler = {
     formatDate(date : any) {
+        if(date === undefined) {
+            return null;
+        }
         const arr = date.split("/");
         var formatedDate = "";
         arr.reverse();
@@ -9,7 +12,25 @@ const dateHandler = {
         formatedDate = formatedDate.slice(0, -1);
         return formatedDate;
     },
+    formatMonthYear(date : any) {
+        const arr = date.split(" ");
+        var formatedDate = "";
+        arr.reverse();
+        formatedDate = arr[0] + "/" + arr[1];
+        return formatedDate;
+    },
+    formatMonthYear1(date : any) {
+        const arr = date.split(" ");
+        var formatedDate = "";
+        arr.reverse();
+        formatedDate = arr[1] + "/" + arr[0];
+
+        return formatedDate;
+    },
     formatVNDate(date : any) {
+        if(date === undefined) {
+            return null;
+        }
         const arr = date.split("/");
         arr.reverse();
         var formatedDate = "Ngày " + arr[0] + " Tháng " + arr[1] + " Năm " + arr[2];
@@ -36,6 +57,9 @@ const dateHandler = {
         return formattedDate2;
     },
     formatDBDate(date : string) {
+        if(date === undefined) {
+            return null;
+        }
         const arr = date.split("/");
         var formatedDate =  arr[0] + "-" + arr[1] + "-" + arr[2];
         return formatedDate;
@@ -45,6 +69,9 @@ const dateHandler = {
         let dateObj = new Date(date);
       
         // Tách giờ và phút từ departureTime
+        if(departureTime === undefined) {
+            return null;
+        }
         const [hour, minute] = departureTime.split(':').map(Number);
       
         // Cập nhật giờ và phút cho đối tượng Date

@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { FlatList } from 'react-native-gesture-handler';
 import { Divider } from '@rneui/themed';
 
-function Profile(): React.JSX.Element{
+function Profile({navigation} : any): React.JSX.Element{
   const { navigate } = useNavigation<StackNavigation>();
 
     const handleOnNavigateToLogin = () => {
@@ -16,22 +16,25 @@ function Profile(): React.JSX.Element{
     const handleOnNavigateToRegister = () => {
         navigate("Register");
     }
+    const onNavigateToTutorial = () => {
+      navigation.navigate('Tutorial');
+    }
   return (
     //<TouchableOpacity  onPress={handleOnNavigate}>
                             //<Text style={{alignSelf: 'center', fontWeight: 'bold'}}>Đăng nhập</Text>
     //</TouchableOpacity>
     
     <View style={{flex: 1,backgroundColor: "#FFFFFF", paddingBottom: 60}}>
-      <View style={[styles.container, {backgroundColor: "#F3F1FD"}]}>
+      <View style={[styles.container, {backgroundColor: "#1CA653"}]}>
         <View>
-          <Text style={{fontSize: 50, padding: 20, color: '#000000', fontWeight: '600'}}>Đăng nhập vào<Text style= {{color: '#F7941D', fontWeight: '600'}}>Tài khoản</Text> </Text>
+          <Text style={{fontSize: 50, padding: 20, color: '#FFFFFF', fontWeight: '600'}}>Đăng nhập vào<Text style= {{color: '#F7941D', fontWeight: '600'}}>Tài khoản</Text> </Text>
         </View>
         <View>
-          <Text style={{paddingHorizontal: 20, fontStyle: 'italic'}}>Hãy chọn một số phương thức đăng nhập dưới đây</Text>
+          <Text style={{paddingHorizontal: 20, fontStyle: 'italic', color: '#FFFFFF'}}>Hãy chọn một số phương thức đăng nhập dưới đây</Text>
         </View>
         <View>
           <TouchableOpacity onPress={handleOnNavigateToLogin} style={[styles.Button]}>
-            <Text style={{fontSize: 20, color: '#FFFFFF', fontWeight: '600'}}>Số điện thoại</Text>
+            <Text style={{fontSize: 20, color: '#000000', fontWeight: '600'}}>Số điện thoại</Text>
           </TouchableOpacity>
         </View>       
         <View>
@@ -51,8 +54,8 @@ function Profile(): React.JSX.Element{
             </View>
         </View>
         <View style={{ paddingTop: 15,alignSelf: 'center', flexDirection: 'row'}}>
-          <Text style={{color: 'gray', fontStyle: 'italic'}}>Bạn chưa có tài khoản? </Text>
-          <TouchableOpacity onPress={handleOnNavigateToRegister} style={{}}><Text style={{color: "#76A1F5"}}>Đăng kí ngay</Text></TouchableOpacity>
+          <Text style={{color: '#FFFFFF', fontStyle: 'italic'}}>Bạn chưa có tài khoản? </Text>
+          <TouchableOpacity onPress={handleOnNavigateToRegister} style={{}}><Text style={{color: "#F7941D"}}>Đăng kí ngay</Text></TouchableOpacity>
         </View>
       </View>
       <ScrollView>
@@ -66,7 +69,7 @@ function Profile(): React.JSX.Element{
           </View>
         </TouchableOpacity>
         <Divider />
-        <TouchableOpacity style= {{paddingHorizontal: 30, paddingVertical: 25, flexDirection: 'row', justifyContent: 'space-between'}}>
+        <TouchableOpacity onPress={onNavigateToTutorial} style= {{paddingHorizontal: 30, paddingVertical: 25, flexDirection: 'row', justifyContent: 'space-between'}}>
           <View>
             <Text style={{fontSize: 20, fontWeight: 'bold', color: "#000000"}}>Hướng dẫn đặt vé</Text>
             <Text style={{fontSize: 15, fontWeight: '400', color: "red", fontStyle: 'italic'}}>Đọc kỹ hướng dẫn trước khi đặt vé sẽ tránh được nhiều sai xót không đáng có</Text>
@@ -90,7 +93,7 @@ const styles = StyleSheet.create({
   Button: {
     paddingHorizontal: 100,
     alignSelf: 'center',
-    backgroundColor: "#56e865",
+    backgroundColor: "white",
     padding: 20,
     marginTop: 20,
     borderRadius: 8,

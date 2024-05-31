@@ -26,6 +26,8 @@ const tripRoutes = require('./routes/tripRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const locationRoutes = require('./routes/locationRoutes');
 const billRoutes = require('./routes/billRoutes');
+const revenueRoutes = require('./routes/revenueRoutes');
+const emailRoutes = require('./routes/emailRoutes');
 // ...
   
 app.use('/api/tickets', ticketRoutes);
@@ -37,6 +39,9 @@ app.use('/api/trips', tripRoutes);
 app.use('/api/booking', bookingRoutes);
 app.use('/api/locations', locationRoutes);
 app.use('/api/bills', billRoutes);
+app.use('/api/revenue', revenueRoutes);
+app.use('/api/email', emailRoutes)
+
   // ...
 // Sử dụng body-parser middleware
 app.use(bodyParser.json());

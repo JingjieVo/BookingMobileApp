@@ -27,11 +27,12 @@ const ticketController = {
             res.status(500).json({ message: error.message });
         }
     },
-    findAvailableTickets: async (req, res) => {
+    findAvailableTicketOfTrip: async (req, res) => {
+        const tripId = req.params.tripId;
         try {
             // Tìm tất cả các vé khả dụng và chưa được mua
-            const availableTickets = await Ticket.find({ available: true, isBought: false });
-            res.status(200).json(availableTickets);
+            const availableTickets = await Ticket.findOne({tripId: tripId, available: true, isBought: false });
+            res.status(200).json(availableTickets._id);
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Internal server error' });

@@ -14,7 +14,7 @@ import { useRoute } from "@react-navigation/native"
 import { type StackNavigation } from "../App";
 import AwesomeAlert from 'react-native-awesome-alerts';
 import { Modalize } from 'react-native-modalize';
-import locationDataGetter  from '../Services/locationService'
+import locationDataGetter  from '../Services/locationServices'
 import tripDataGetter from '../Services/tripServices';
 import dateHandler from '../module/dateHandler';
 import SearchHistoryBadge from '../components/searchHistoryBadge';
@@ -318,7 +318,7 @@ function Search({ navigation } : any) {
                 <Text style={{fontSize: 40, fontWeight: '900', color: "#000000" }}>Chọn tỉnh thành</Text>
               </View>
               <ScrollView showsVerticalScrollIndicator={false}>
-              {locations.map((location, index) => <Location key={location._id} onPressLocation={ChooseDeparture} _id={location._id} name={location.name} description={location.description} ></Location>)}
+              {locations.map((location, index) => <Location key={location._id} onPressLocation={ChooseDeparture} _id={location._id} name={location.name} description={location.description} imgLink={location.imageLinks} ></Location>)}
               </ScrollView>
             </View>   
           </View>
@@ -346,7 +346,7 @@ function Search({ navigation } : any) {
                 <Text style={{fontSize: 40, fontWeight: '900', color: "#000000" }}>Chọn tỉnh thành</Text>
               </View>
               <ScrollView showsVerticalScrollIndicator={false}>
-              {locations.map((location, index) => <Location key={location._id} onPressLocation={ChooseDestination} _id={location._id} name={location.name} description={location.description} ></Location>)}
+              {locations.map((location, index) => <Location key={location._id} onPressLocation={ChooseDestination} _id={location._id} name={location.name} description={location.description} imgLink={location.imageLinks}></Location>)}
               </ScrollView>
             </View>   
           </View>

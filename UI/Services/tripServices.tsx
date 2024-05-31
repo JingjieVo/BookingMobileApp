@@ -50,6 +50,40 @@ const tripDAO = {
       console.error('Error getting ticket list of trip:', error);
       throw error;
     }
+  },
+  deleteTrip: async (trip : any) => {
+    const {
+      departure, 
+      departureTime,
+      destination,
+      date,
+      driverId,
+      coachId,
+      estimatedTime,
+      tripPrice
+    } = trip
+    try {
+      console.log(trip)
+      const response = await axios.delete(`${BASE_URL}/`, {
+        params: {
+          departure : departure,
+          departureTime : departureTime,
+          destination : destination,
+          date : date,
+          driverId : driverId,
+          coachId : coachId,
+          estimatedTime : estimatedTime,
+          tripPrice : tripPrice 
+        }})
+      if (response.status === 200) {
+        console.log(response.data);
+        return true;
+      }
+      return false;
+    }catch (error) {
+      console.log('Error deleting trip:', error);
+      return false;
+    }
   }
 };
 

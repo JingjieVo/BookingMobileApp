@@ -12,4 +12,7 @@ router.get('/', tripController.getAllTrips);
 router.get('/search', tripController.findTripsByDepartureAndDestination)
 
 router.get('/tickets', tripController.getTicketListOfTrip)
+
+router.delete('/', tripController.deleteTrip);
+
 module.exports = router;

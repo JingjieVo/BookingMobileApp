@@ -13,4 +13,9 @@ router.get('/', userController.getAllUsers);
 //GET: lấy người dùng bằng id
 router.get('/:id', userController.getAnUser);
 
+//GET: lấy người dùng bằng email
+router.post('/email', userController.getAnUserByEmail);
+
+router.put('/:userId', userController.updateUser);
+
 module.exports = router;

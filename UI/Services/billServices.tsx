@@ -44,9 +44,9 @@ const billService = {
     },
 
     // Cập nhật hóa đơn
-    updateBill: async (id : any , billData : any) => {
+    updateBill: async (id : any , billStatus : any) => {
         try {
-            const response = await axios.put(`${BASE_URL}/${id}`, billData);
+            const response = await axios.put(`${BASE_URL}/${id}`, {billStatus : billStatus});
             return response.data;
         } catch (error) {
             console.error('Error updating bill:', error);

@@ -17,10 +17,15 @@ const billSchema = new Schema({
         type: Number,
         required: true
     },
+    billStatus: {
+        type: String,
+        enum: ['PENDING', 'FINISHED'],
+        default: 'PENDING'
+    },
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
 });
 
 const Bill = mongoose.model('Bill', billSchema);

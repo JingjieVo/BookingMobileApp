@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const coachSchema = new mongoose.Schema({
   licensePlate: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   coachStatus: {
     type: Boolean,

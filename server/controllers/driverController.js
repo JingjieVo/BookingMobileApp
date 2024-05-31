@@ -26,7 +26,17 @@ const driverController = {
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
-    }
+    },
+    deleteDriver: async (req, res) => {
+        const { driverId } = req.query;
+         try {
+            const driver = await Driver.findByIdAndDelete(driverId);
+            res.status(200).json({ message: driver});
+         } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Internal server error' });
+         }
+      }
 };
 
 module.exports = driverController;

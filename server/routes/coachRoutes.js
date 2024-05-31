@@ -8,4 +8,6 @@ router.post('/', coachController.addCoach);
 // Route để lấy danh sách tất cả các xe khách
 router.get('/', coachController.getAllCoaches);
 
+router.delete('/delete',coachController.deleteCoach);
+
 module.exports = router;

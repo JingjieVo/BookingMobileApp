@@ -14,6 +14,7 @@ import React from 'react';
 import trip from '../Services/tripServices';
 import billService from '../Services/billServices';
 import userService from '../Services/userServices';
+import moneyHandler from "../module/moneyHandler";
 
 const seats = [
     {
@@ -179,12 +180,15 @@ const seats = [
 ]
 
 function BookTicket({ route, navigation } :any) {
+
     const [loggedUser, setLoggedUser] = useState(null);
     const [loggedUserId, setLoggedUserId] = useState(null);
     const [billId, setBillId] = useState(null);
     const [showLoading, setShowLoading] = useState(false);
     const [chooseSeatModal, setChooseSeatModal] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
+    const [showNotLoggedAlert, setShowNotLoggedAlert] = useState(false);
+
     const { navigate } = useNavigation<StackNavigation>();
     const { height } = Dimensions.get('window');
     const {id,
@@ -240,10 +244,16 @@ function BookTicket({ route, navigation } :any) {
             return null;
         }
     }
-    
+    const hideNotLoggedAlert = () => {
+        setShowNotLoggedAlert(false)
+    }
+    const handleOnNavigateToLogin = () => {
+        navigate("Login");
+      }
     const confirmButton = async () => {
         if (!loggedUserId) {
             console.log('User ID is not set');
+            setShowNotLoggedAlert(true);
             return;
         }
         const newBillId = await createTransaction();
@@ -336,7 +346,7 @@ function BookTicket({ route, navigation } :any) {
                             <View style={[styles.modalContent,{flexDirection: 'row'}]}>
                                 <View style={{justifyContent: 'space-between', padding: 10}}>
                                     <Text style={{fontSize: 20, fontWeight: '900'}}>Tổng tiền:</Text>
-                                    <Text style={{color: 'orange' , fontSize: 20, fontWeight: '500'}}>VND {totalPrice}</Text>
+                                    <Text style={{color: 'orange' , fontSize: 20, fontWeight: '500'}}>VND {moneyHandler.convertToVND(totalPrice)}</Text>
                                     <Text style={{fontStyle: 'italic', fontSize: 12}}>Đã bao gồm giá vé & thuế</Text>
                                 </View>
                                 <View style={[styles.continueButton]}>
@@ -387,6 +397,32 @@ function BookTicket({ route, navigation } :any) {
           }}
           onConfirmPressed={() => {
             hideLoading();
+          }}
+        />
+        <AwesomeAlert
+          messageStyle={styles.alertMessage}
+          
+          confirmButtonTextStyle={styles.confirmButtonText}
+          contentContainerStyle={{padding: 30}}
+          titleStyle={{fontSize: 30, fontWeight: 'bold'}}
+          show={showNotLoggedAlert}
+          showProgress={false}
+          title="Thông báo"
+          message="Bạn chưa đăng nhập"
+          closeOnTouchOutside={false}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          confirmText="Đăng nhập"
+          cancelText='Hủy'
+          confirmButtonColor="#56e865"
+          onCancelPressed={() => {
+            
+          }}
+          onConfirmPressed={() => {
+            hideNotLoggedAlert();
+            handleOnNavigateToLogin();
+            
           }}
         />  
     </ScrollView>

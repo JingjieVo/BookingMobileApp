@@ -1,430 +1,258 @@
 
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import { Image, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, Modal, Platform, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View, useColorScheme, Alert } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import dateHandler from '../module/dateHandler';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import React, { useEffect, useState } from 'react';
-import locationDataGetter from '../Services/locationService';
+import locationDataGetter from '../Services/locationServices';
 import { getFormatedDate } from 'react-native-modern-datepicker';
 import { StackNavigation } from '../App';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import DatePicker from 'react-native-modern-datepicker'
 import { Divider } from '@rneui/base';
 import Location from '../components/location';
-
-
-function Home({ navigation } : any) {
-  const today = new Date();
-  const startDate = getFormatedDate(today, 'YYYY/MM/DD')
-
-
-  const [locations, setLocations] = useState<any[]>([]);
-  const [isDepartureModalVisible, setIsDepartureModalVisible] = useState(false);
-  const [isDestinationModalVisible, setIsDestinationModalVisible] = useState(false);
-  const [isCalendarModalVisible, setIsCalendarModalVisible] = useState(false);
-  const [choosenDestination, setChoosenDestination] = useState("");
-  const [destinationDescriptions, setDestinationDescriptions] = useState("");
-  const [choosenDeparture, setChoosenDeparture] = useState("");
-  const [departureDescriptions, setDepartureDescriptions] = useState("");
-  const [pickedDate, setPickedDate] =  useState(startDate);
-  const [showAlert, setShowAlert] = useState(false);
-  const [showLoading, setShowLoading] = useState(false);
-  const { navigate } = useNavigation<StackNavigation>();
-  const [ searchHistories, setSearchHistories ] = useState<any[]>([]);
+import { SliderBox } from 'react-native-image-slider-box';
+import userService from '../Services/userServices';
 
 
 
-  const hideAlert = () => {
-    setShowAlert(false);
-  }
-  const hideLoading = () => {
-    setShowLoading(false);
-  }
-  const OpenModal = () => {
-    setIsDepartureModalVisible(true);
-  }
-  const CloseModal= () => {
-    setIsDepartureModalVisible(false);
-  }
-  const ChooseDeparture = (name : string, description: string) => {
-    console.log(name);
-    console.log(description);
-
-    setDepartureDescriptions(description);
-    setChoosenDeparture(name);
-    setIsDepartureModalVisible(false);
-  }
-  const ChooseDestination = (name : string, description: string) => {
-    console.log(name);
-    console.log(description);
-    setDestinationDescriptions(description)
-    setChoosenDestination(name);
-    setIsDestinationModalVisible(false);
-  }
-  const ExChangeLocation = () => {
-    let tmp = choosenDeparture;
-    setChoosenDeparture(choosenDestination);
-    setChoosenDestination(tmp);
-  }
-  const handleDateChange = (propDate : any) => {
-    setPickedDate(propDate);
-    setIsCalendarModalVisible(false);
-  }
-  const handleButtonSearchClick = ( ) => {
-      if(choosenDeparture === "" || choosenDestination === "") {
-        setShowAlert(true);
-        return
-      }
-      setShowLoading(true);
-      setTimeout(() => {
-        searchHistories.push({
-          departure: choosenDeparture,
-          destination: choosenDestination,
-          date: pickedDate,
-        })
-        console.log(searchHistories)
-        setShowLoading(false);
-        navigation.navigate('SearchTicketResult',
-        { 
-          departure: choosenDeparture,
-          departureDescriptions: departureDescriptions,
-          destination: choosenDestination,
-          destinationDescriptions: destinationDescriptions,
-          date: pickedDate,
-        })
-      }, 1000)
-      
-  }
-  const onClickHistory = (departure : string, departureDescriptions: string, destination : string, destinationDescriptions: string,  date : string) => {
-    setShowLoading(true);
-      setTimeout(() => {
-        setShowLoading(false);
-        navigation.navigate('SearchTicketResult',
-        { 
-          departure: departure,
-          departureDescriptions: departureDescriptions,
-          destination: destination,
-          destinationDescriptions: destinationDescriptions,
-          date: date,
-        })
-      }, 1000)
-  }
+const saleSliderImages = [
+  require('../assets/img/a1.png'),
+  require('../assets/img/a2.png'),
+  require('../assets/img/a3.png'),
+  require('../assets/img/a4.png'),
   
+]
+export default function Home({navigation} : any) {
+  const [name, setName] = useState('Quý Khách')
+  const { navigate } = useNavigation<StackNavigation>();
+  const [loggedUser, setLoggedUser] = useState(null);
+  const getLoggedUser = async () => {
+    const user = await userService.getUser();
+    setLoggedUser(user);
+    if(user) {
+      setName(user.name);
+    }
+
+  }
+  const onCickPage1 = () => {
+    navigate('Page1');
+  }
+  const onCickPage2 = () => {
+    navigate('Page2');
+  }
+  const onCickPage3 = () => {
+    navigate('Page3');
+  }
+  const onCickPage4 = () => {
+    navigate('Page4');
+  }
+  const onClickProfile = async () => {
+    const user = await userService.getUser();
+    if(user){
+      navigation.navigate('EditProfile', {
+        userId: user.userId,
+        username: user.username,
+        email: user.email,
+        password: user.password,
+        name: user.name,
+        phone: user.phone
+      })
+    }
+    else {
+      navigate('Login')
+    }
+  }
   useEffect(() => {
     // Gọi hàm để lấy tất cả các địa điểm khi component được render
-    const fetchLocations = async () => {
-      try {
-        const allLocations = await locationDataGetter.getAllLocations();
-        setLocations(allLocations);
-        //console.log(locations);
-      } catch (error) {
-        console.error('Error fetching locations:', error);
-      }
-    };
-
-    fetchLocations();
+    getLoggedUser();
   }, []);
+
   return (
-    <View style={[styles.body]}>
-      <LinearGradient
-        colors={['#F79525', 'rgba(239, 175, 169, 0)']}
-        start={{ x: 0.64, y: -0.4091 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.gradient}
-      />
-      <LinearGradient
-        colors={['rgba(255, 200, 102, 0.2)', 'rgba(255, 206, 31, 0)']}
-        start={{ x: 0.9253, y: 0.2305 }}
-        end={{ x: 1, y: 1 }}
-        style={[styles.gradient, styles.overlay]}
-      />
-      <View style={styles.overlayView}>
-        <Image
-          style={styles.tinyLogo}
-          source={require('../assets/img/logo.png')}
-        />
-        <Text style={{fontSize: 20, marginBottom: 20, fontWeight: '900', color: '#F7941D'}}>TÌM VÀ ĐẶT VÉ</Text>
-        <View style= {{flexDirection: 'row', marginHorizontal: 10}}>
-          <View  style={{flex: 6, alignSelf: 'center'}}>
-            <View style={{flexDirection: 'row', marginBottom: 15, marginRight: 10}}>
-              <Icon name="location-outline" color="#F7941D" style={{fontSize: 30, color: '#F7941D', fontWeight: '900', alignSelf: 'center'}}/>
-              <TouchableOpacity style={styles.textInput} onPress={() => setIsDepartureModalVisible(true)}>
-                <Text style={{fontWeight: '900', color: '#F7941D'}}>Điểm đi:         <Text style={{fontWeight: '900', color: '#7fd7f4', fontSize: 15}}>{choosenDeparture}</Text></Text>
-              </TouchableOpacity>
+    <View>
+      <View style={[styles.header]}>
+        <View style={[styles.headerContent]}>
+          <TouchableOpacity onPress={onClickProfile} style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View>
+            <Image
+                style={styles.avatar}
+                source={require('../assets/img/avt.png')}
+                />
             </View>
-            <View style={{flexDirection: 'row', marginBottom: 15, marginRight: 10}}>
-              <Icon name="location-sharp" color="#F7941D" style={{fontSize: 30, color: '#F7941D', fontWeight: '900', alignSelf: 'center'}}/>
-              <TouchableOpacity style={styles.textInput} onPress={() => setIsDestinationModalVisible(true)}>
-                <Text style={{fontWeight: '900', color: '#F7941D'}}>Điểm đến:       <Text style={{fontWeight: '900', color: '#7fd7f4', fontSize: 15}}>{choosenDestination}</Text></Text>
-              </TouchableOpacity>
+            <View>
+              <Text style={{color: 'white',fontSize: 16, fontWeight: '500'}}>xin chào,</Text>
+              <Text style={{color: 'white',fontSize: 20, fontWeight: '900'}}>{name}</Text>
             </View>
-          </View>
-          <View style={{flex: 2, alignSelf: 'center', marginLeft: 10}}>
-            <TouchableOpacity onPress={ExChangeLocation} style={{borderRadius: 50, backgroundColor: 'transparent', padding: 15}}>
-              <Icon1 name="change-circle" color="#5c7cd6" style={{fontSize: 30, color: '#F7941D', fontWeight: '600', alignSelf: 'center'}}/>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={{flexDirection: 'row', marginBottom: 15, marginRight: 10}}>
-        <Icon name="calendar-sharp" color="#F7941D" style={{fontSize: 30, color: '#F7941D', fontWeight: '900', alignSelf: 'center', marginRight: 5,}}/>
-        <TouchableOpacity style={styles.datePickerInput} onPress={() => setIsCalendarModalVisible(true)}>
-            <Text style={{fontWeight: '900', color: '#F7941D'}}>Ngày đi:       <Text style={{fontWeight: '900', color: '#F7941D', fontSize: 15}}>{dateHandler.formatDate(pickedDate)}</Text></Text>
           </TouchableOpacity>
+          <View>
+          <Image
+                style={styles.tinyLogo}
+                source={require('../assets/img/logo.png')}
+                />
+          </View>
         </View>
-        <TouchableOpacity style={styles.searchButton} onPress={handleButtonSearchClick}>
-          <Text style={{fontWeight: '900', color: 'white'}}>TÌM CHUYẾN XE</Text>
-        </TouchableOpacity>
       </View>
-      <View></View>
-      <View>
-        <Modal
-        visible={isDestinationModalVisible}
-        onRequestClose={() => setIsDestinationModalVisible(false)}
-        animationType='slide'
-        transparent={true}
-        style={[]}
-        >
-          
-          <View  style={[styles.modalBox]}>
-            <View style={[styles.modalContent]}>
-              <View style={{paddingHorizontal: 80}}>
-                <Divider width={4} style={{marginBottom: 20}}></Divider>
-              </View>
-              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <TextInput placeholder='Tìm tỉnh thành phố' style={[styles.textInput,{flex: 5}]}></TextInput>
-                <TouchableOpacity onPress={()=> setIsDestinationModalVisible(false)} style={[{flex: 1, paddingTop: 6, marginLeft: 20}]}><Text style={{fontSize: 18, fontWeight: 'bold'}}>Hủy</Text></TouchableOpacity>
-              </View>
-              <View>
-                <Text style={{fontSize: 40, fontWeight: '900', color: "#000000" }}>Chọn tỉnh thành</Text>
-              </View>
-              <ScrollView showsVerticalScrollIndicator={false}>
-              {locations.map((location, index) => <Location key={location._id} onPressLocation={ChooseDestination} _id={location._id} name={location.name} description={location.description} imgLink={location.imgLink} ></Location>)}
-              </ScrollView>
-            </View>   
+      <View >
+        <View style={[styles.bodyContent]}>
+          <View>
+            <Text style={[styles.titleText]}>Chương trình khuyến mãi đặc biệt</Text>
           </View>
-        </Modal>
-      </View>
-      <View>
-        <Modal
-        visible={isDepartureModalVisible}
-        onRequestClose={() => setIsDepartureModalVisible(false)}
-        animationType='slide'
-        transparent={true}
-        style={[]}
-        >
-          <View  style={[styles.modalBox]}>
-            <View style={[styles.modalContent]}>
-              <View style={{paddingHorizontal: 80}}>
-                <Divider width={4} style={{marginBottom: 20}}></Divider>
-              </View>
-              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <TextInput placeholder='Tìm tỉnh thành phố' style={[styles.textInput,{flex: 5}]}></TextInput>
-                <TouchableOpacity onPress={()=> setIsDepartureModalVisible(false)} style={[{flex: 1, paddingTop: 6, marginLeft: 20}]}><Text style={{fontSize: 18, fontWeight: 'bold'}}>Hủy</Text></TouchableOpacity>
-              </View>
-              <View>
-                <Text style={{fontSize: 40, fontWeight: '900', color: "#000000" }}>Chọn tỉnh thành</Text>
-              </View>
-              <ScrollView showsVerticalScrollIndicator={false}>
-              {locations.map((location, index) => <Location key={location._id} onPressLocation={ChooseDeparture} _id={location._id} name={location.name} description={location.description} imgLink={location.imgLink} ></Location>)}
-              </ScrollView>
-            </View>   
+          <View style={{ alignSelf: 'center', height: 200, marginHorizontal: 0}}>
+            <SliderBox images={saleSliderImages} 
+                      dotColor="#1CA653"
+                      inactiveDotColor="white"
+                      paginationBoxVerticalPadding={20}
+                      autoplay
+                      circleLoop
+                      resizeMethod={'resize'}
+                      resizeMode={'cover'}
+                      paginationBoxStyle={{
+                        position: "absolute",
+                        bottom: 0,
+                        padding: 80,
+                        alignItems: "center",
+                        alignSelf: "center",
+                        justifyContent: "center",
+                        paddingVertical: 20
+                      }}
+                      dotStyle={{
+                        width: 10,
+                        height: 10,
+                        borderRadius: 5,
+                        marginHorizontal: 10,
+                        paddingTop: 0,
+                        marginTop: 0,
+                        top: 40,
+                        backgroundColor: "rgba(128, 128, 128, 0.92)"
+                      }}
+                      ImageComponentStyle={{borderRadius: 15, width: '90%', alignSelf: 'center', justifyContent: 'center'}}
+                      imageLoadingColor="#2196F3"
+            />
           </View>
-        </Modal>
-      </View>
-      <View>
-        <Modal
-        animationType='slide'
-        transparent={true}
-        visible={isCalendarModalVisible}
-        onRequestClose={() => setIsCalendarModalVisible(false)}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <DatePicker 
-              mode='calendar'
-              selected={pickedDate}
-              minimumDate={startDate}
-              onDateChange={handleDateChange}>
-              </DatePicker>
-              <TouchableOpacity onPress={() => setIsCalendarModalVisible(false)}>
-                <Text style={{fontWeight: '900'}}>Close</Text>
+
+          <View >
+            <Text style={[styles.titleText, {marginTop: 25}]}>
+              Tin mới về hãng xe
+            </Text>
+          </View>
+          <View>
+            <ScrollView contentContainerStyle={{ height: '112%'}}>
+              <TouchableOpacity onPress={onCickPage1} style={[styles.newsItem]}>
+                <Image
+                style={styles.newsImage}
+                source={require('../assets/img/a2.png')}
+                />
+                <View style={[styles.newsContent]}>
+                  <Text style={[styles.newsTitleText]}>TƯNG BỪNG KHAI TRƯƠNG GIẢM GIÁ BẤT NGỜ</Text>
+                  <Text style={[styles.newsDescriptionText]}>Để chào mừng sự kiện khai trương tuyến xe mới, HY travelbus đã triển khai chương trình khuyến mãi hấp dẫn dành cho khách hàng.</Text>
+                </View>
               </TouchableOpacity>
-            </View>
+              <TouchableOpacity onPress={onCickPage4} style={[styles.newsItem]}>
+                <Image
+                style={styles.newsImage}
+                source={require('../assets/img/a3.png')}
+                />
+                <View style={[styles.newsContent]}>
+                  <Text style={[styles.newsTitleText]}>KHAI TRƯƠNG TUYẾN MỚI TP.HCM - ĐÀ NẴNG</Text>
+                  <Text style={[styles.newsDescriptionText]}>20/04/2024, HY Travelbus chính thức khai trương tuyến xe mới từ Thành phố Hồ Chí Minh đến Đà Nẵng, mở rộng mạng lưới vận tải hành khách của công ty trên khắp miền Trung.</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={onCickPage3}  style={[styles.newsItem]}>
+                <Image
+                style={styles.newsImage}
+                source={require('../assets/img/a4.png')}
+                />
+                <View style={[styles.newsContent]}>
+                  <Text style={[styles.newsTitleText]}>AN TOÀN - THOẢI MÁI - CHẤT LƯỢNG</Text>
+                  <Text style={[styles.newsDescriptionText]}>Khi lựa chọn HY Travelbus, bạn đang tin tưởng vào một thương hiệu vận tải khách hàng đầu Việt Nam, với triết lý kinh doanh "An toàn - Thoải mái - Chất lượng".</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={onCickPage2}  style={[styles.newsItem]}>
+                <Image
+                style={styles.newsImage}
+                source={require('../assets/img/a1.png')}
+                />
+                <View style={[styles.newsContent]}>
+                  <Text style={[styles.newsTitleText]}>HY TRAVELBUS VỮNG TIN VÀ PHÁT TRIỂN</Text>
+                  <Text style={[styles.newsDescriptionText]}>HY Travelbus vẫn duy trì và mở rộng mạng lưới các tuyến đường, giữ vững vị thế dẫn đầu. Điều này cho thấy sự vững tin, bản lĩnh và chiến lược kinh doanh hiệu quả của công ty.</Text>
+                </View>
+              </TouchableOpacity>
+            </ScrollView>
           </View>
-        </Modal>
+        </View>
       </View>
-      <AwesomeAlert
-          messageStyle={styles.alertMessage}
-          confirmButtonStyle={styles.confirmButton}
-          contentContainerStyle={{padding: 30}}
-          titleStyle={{fontSize: 30, fontWeight: 'bold'}}
-          confirmButtonTextStyle={styles.confirmButtonText}
-          show={showAlert}
-          showProgress={false}
-          title="Thông báo"
-          message="Hãy chọn điểm đi và điểm đến"
-          closeOnTouchOutside={true}
-          closeOnHardwareBackPress={false}
-          showCancelButton={false}
-          showConfirmButton={true}
-          confirmText="OK"
-          confirmButtonColor="#56e865"
-          onCancelPressed={() => {
-            hideAlert();
-          }}
-          onConfirmPressed={() => {
-            hideAlert();
-          }}
-        />
-        <AwesomeAlert
-          progressSize='30'
-          progressColor='#56e865'
-          show={showLoading}
-          showProgress={true}
-          closeOnTouchOutside={true}
-          closeOnHardwareBackPress={false}
-          showCancelButton={false}
-          showConfirmButton={false}
-          confirmText="OK"
-          confirmButtonColor="#56e865"
-          onCancelPressed={() => {
-            hideLoading();
-          }}
-          onConfirmPressed={() => {
-            hideLoading();
-          }}
-        />  
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    backgroundColor: 'transparent',
+  header: {
+    width: '100%',
+    height: 150,
+    backgroundColor: '#56e865',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
-  gradient: {
-    flex: 1,
+  headerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 20,
+    paddingTop: 25,
+
   },
-  overlay: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    right: 0,
-    bottom: 0,
-  },
-  overlayView: {
-    marginTop: 100,
-    //marginHorizontal: 40,
-    backgroundColor: 'white',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    width: '94%',
-    height: '47%',
-    paddingBottom: 30,
-    alignSelf: 'center',
-    borderRadius: 15,
+  avatar: {
+    width: 45,
+    height: 45,
+    borderRadius: 50,
+    borderWidth: 2,
+    borderColor: 'white',
+    marginRight: 5,
   },
   tinyLogo: {
-    //backgroundColor: 'red',
-    position:'relative',
-    bottom: 30,
-    width: 150,
-    height: 150,
-    alignSelf: 'center',
+    width: 100,
+    height: 100,
+    borderRadius: 50,
   },
-  textInput: {
-    width: '100%',
-    fontWeight: 'bold',
-    height: 40,
-    backgroundColor: "transparent",
-    padding: 10,
-    borderRadius: 15,
-    borderColor: '#F7941D',
-    borderWidth: 2,
+  body: {
+    
   },
-  datePickerInput: {
-    width: '80%',
-    fontWeight: 'bold',
-    height: 40,
-    backgroundColor: "transparent",
-    padding: 10,
-    borderRadius: 15,
-    borderColor: '#F7941D',
-    borderWidth: 2,
+  bodyContent: {
+    paddingHorizontal: 20,
   },
-  searchButton: {
-    backgroundColor: '#F7941D',
-    width: '100%',
-    height: '13%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderBottomLeftRadius: 15,
-    borderBottomRightRadius: 15,
+  titleText: {
+    color: '#1CA653',
+    fontSize: 16,
+    fontWeight: '700',
+    marginTop: 10,
+    marginBottom: 10,
   },
-  modalBox: {
-    flex: 1,
-    marginTop: 60,
-    backgroundColor: 'white',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    elevation: 5,
+  newsItem: {
+    flexDirection: 'row',
+    marginTop: 10,
   },
-  modalContent: {
-    padding: 2,
-    paddingTop: 20,
-    marginHorizontal: 20
+  newsImage: {
+    height: 70,
+    width: 100,
+    borderRadius: 10,
+    marginRight: 5,
+    marginBottom: 10,
   },
-  button: {
-    paddingHorizontal: 40,
-    alignSelf: 'center',
-    backgroundColor: "white",
-    padding: 15,
-    borderRadius: 8,
+  newsContent: {
+    flexDirection: 'column',
   },
-  alertMessage: {
-    fontSize:14,
-    fontStyle: 'italic',
-    textAlign: 'center'
+  newsTitleText: {
+    color: '#1CA653',
+    fontWeight: '500',
+    paddingRight: 100,
+    fontSize: 10,
   },
-  confirmButton: {
-      height: 30,
-      width: 100
-  },
-  confirmButtonText: {
-      alignSelf: 'center',
-      justifyContent: 'center',
-  },
-  textAlert: {
-    textAlign: 'center',
-    fontWeight: '900',
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    width: '90%',
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
+  newsDescriptionText: {
+    fontWeight: '200',
+    paddingRight: 115,
+    fontSize: 10,
+  }
 });
 
-export default Home;
+
