@@ -24,6 +24,16 @@ const coachController = {
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
+  },
+  deleteCoach: async (req, res) => {
+    const { coachId } = req.query;
+     try {
+        const coach = await Coach.findByIdAndDelete(coachId);
+        res.status(200).json({ message: coach});
+     } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+     }
   }
 };
 

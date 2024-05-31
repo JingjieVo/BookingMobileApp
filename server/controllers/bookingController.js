@@ -143,7 +143,7 @@ const bookingController = {
 
         try {
             // Tìm kiếm booking history của người dùng
-            const bookingHistory = await BookingHistory.findOne({ userId: userId }).populate('bookingList.ticket');
+            const bookingHistory = await BookingHistory.findOne({ userId: userId }).populate('bookingList.ticket').populate('bookingList.billId');
 
             if (!bookingHistory) {
                 return res.status(404).json({ message: 'Booking history not found' });

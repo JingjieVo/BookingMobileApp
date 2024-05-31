@@ -27,7 +27,31 @@ const timeHandler = {
         const hours = time.getHours().toString().padStart(2, '0');
         const minutes = time.getMinutes().toString().padStart(2, '0');
         return `${hours}:${minutes}`;
-      }
+      },
+      formatDateTime: (isoString : any) => {
+        const date = new Date(isoString);
+    
+        // Extract hours and minutes
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+    
+        // Format hours and minutes
+        const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    
+        // Extract day, month, and year
+        const day = date.getDate();
+        const month = date.getMonth() + 1; // Months are zero-indexed
+        const year = date.getFullYear();
+    
+        // Format day, month, and year
+        const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`;
+    
+        return `${formattedTime} / ${formattedDate}`;
+    },
+    getCurrentISODateTime: () => {
+        const now = new Date();
+        return now.toISOString();
+    }
 }
 
 export default timeHandler;

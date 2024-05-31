@@ -4,7 +4,7 @@ import config from '../config'
 const BASE_URL = config.BASE_URL_LOCATIONS; // Thay đổi đường dẫn này với URL của backend server của bạn
  // Thay đổi đường dẫn này với URL của backend server của bạn
 
-const locationDAO = {
+const locationService = {
   // Lấy tất cả các địa điểm
   getAllLocations: async () => {
     try {
@@ -39,4 +39,4 @@ const locationDAO = {
   }
 };
 
-export default locationDAO;
+export default locationService;

@@ -2,6 +2,8 @@
 import { NavigationContainer, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity, Modal  } from 'react-native';
 import { type StackNavigation } from "../App";
+import moneyHandler from "../module/moneyHandler";
+
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import Trip from '../components/trip';
 import { Divider } from '@rneui/base';
@@ -67,8 +69,6 @@ function SearchTicketResult({ route, navigation } :any) {
     const [showAlert, setShowAlert] = useState(false);
     const [isModalTripOpened, setIsModalTripOpened] = useState(false);
     const [ trips, setTrips ] = useState<any[]>([]);
-    
-
     const OnChooseTrip = (trip : any) => {
         setChoosenTrip({
             id: trip._id,
@@ -84,7 +84,7 @@ function SearchTicketResult({ route, navigation } :any) {
             estimatedTime: trip.estimatedTime,
             tripPrice: trip.tripPrice
         })
-        console.log(trip.driverName)
+        //console.log(trip)
         setIsModalTripOpened(true);
     }
     const OnContinueButton = () => {
@@ -113,7 +113,6 @@ function SearchTicketResult({ route, navigation } :any) {
     }
     useFocusEffect(
         React.useCallback(() => {
-        // Gọi hàm để lấy tất cả các địa điểm khi component được render
             const fetchTrips = async () => {
                 try {
                     const foundTrips = await tripDataGetter.findTripsByDepartureAndDestination(departure, destination, dateHandler.formatDBDate(date));
@@ -130,7 +129,7 @@ function SearchTicketResult({ route, navigation } :any) {
         }, [])
     );
     return (
-        <View style={{backgroundColor: '#56e865'}}>
+        <View style={{backgroundColor: '#1CA653'}}>
             <View style={[styles.header]}>
                 <View style= {{flexDirection:'row'}}>
                     <TouchableOpacity onPress={handleOnBack} style={{ paddingTop: 10}}>
@@ -165,9 +164,17 @@ function SearchTicketResult({ route, navigation } :any) {
                             <Text style={{fontWeight: '900', fontSize: 16}}>{dateHandler.formatVNDate(date)}</Text>
                             <View style={[styles.tripDetails]}>
                                 <View style={{justifyContent: 'space-between', paddingRight: 20,}}>
-                                    <Text>{choosenTrip.departureTime}</Text>
+                                    <View>
+                                        <Text>{choosenTrip.departureTime}</Text>
+                                      <Text style={{fontSize: 10}}>({dateHandler.formatDate(choosenTrip.date)})</Text>
+
+                                    </View>
                                     <Text>{timeHandler.convertHour(choosenTrip.estimatedTime)}</Text>
-                                    <Text>{timeHandler.addHours(choosenTrip.departureTime, choosenTrip.estimatedTime)}</Text>
+                                    <View>
+                                        <Text>{timeHandler.addHours(choosenTrip.departureTime, choosenTrip.estimatedTime)}</Text>
+                                      <Text style={{fontSize: 10}}>({dateHandler.toTimeDate(choosenTrip.departureTime, dateHandler.formatDBDate(choosenTrip.date), choosenTrip.estimatedTime)})</Text>
+
+                                    </View>
                                 </View>
                                 <Divider orientation='vertical'></Divider>
                                 <View style={{justifyContent: 'space-between', marginHorizontal: 10, paddingRight: 35}}>
@@ -202,7 +209,7 @@ function SearchTicketResult({ route, navigation } :any) {
                             <View style={[styles.modalContent,{flexDirection: 'row'}]}>
                                 <View style={{justifyContent: 'space-between', padding: 10}}>
                                     <Text style={{fontSize: 20, fontWeight: '900'}}>Tổng tiền:</Text>
-                                    <Text style={{color: 'orange' , fontSize: 20, fontWeight: '500'}}>VND {choosenTrip.tripPrice}</Text>
+                                    <Text style={{color: 'orange' , fontSize: 20, fontWeight: '500'}}>VND {moneyHandler.convertToVND(choosenTrip.tripPrice)}</Text>
                                     <Text style={{fontStyle: 'italic', fontSize: 12}}>Đã bao gồm giá vé & thuế</Text>
                                 </View>
                                 <View style={[styles.continueButton]}>
@@ -243,7 +250,7 @@ function SearchTicketResult({ route, navigation } :any) {
 const styles = StyleSheet.create({
     header: {
         padding: 20,
-        backgroundColor: '#56e865',
+        backgroundColor: '#1CA653',
     },
     body: {
         paddingTop: 10,

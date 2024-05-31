@@ -5,13 +5,14 @@ import { Props } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
 import timeHandler from "../module/timeHandler";
 import dateHandler from "../module/dateHandler";
+import moneyHandler from "../module/moneyHandler";
 
 type tripProps = {
     _id: string;
     departure: string;
     departureTime: string;
     destination: string;
-    date: string;
+    date: any;
     coachLicensePlate: string;
     driverName: string,
     tickets: any[];
@@ -35,7 +36,7 @@ const Trip = (prop: tripProps ) => {
                             <Text style={{fontSize: 16, fontStyle: 'italic', color: 'black', maxWidth: 300, fontWeight: '200'}}>({departure}) <Icon style={{fontSize: 16, color: 'gray'}} name="long-arrow-right"></Icon> ({destination})</Text>      
                                 <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 8}}>
                                     <View > 
-                                        <Text style={{color: '#ff924f', fontSize: 16}}><Icon name="dollar" style={{fontWeight: '900', color: '#ff924f', fontSize: 16}}></Icon> {tripPrice}VND</Text>
+                                        <Text style={{color: '#ff924f', fontSize: 16}}><Icon name="dollar" style={{fontWeight: '900', color: '#ff924f', fontSize: 16}}></Icon> {moneyHandler.convertToVND(tripPrice)}VND</Text>
                                     </View>
                                     <Icon name="angle-double-right" style={{fontSize: 20}}></Icon>
                                 </View>    

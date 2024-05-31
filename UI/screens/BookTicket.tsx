@@ -12,6 +12,7 @@ import Trip from '../components/trip';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import React from 'react';
 import tripDataGetter from '../Services/tripServices';
+import moneyHandler from "../module/moneyHandler";
 
 const seats = [
     {
@@ -324,7 +325,7 @@ function BookTicket({ route, navigation } : any) {
                             <View style={[styles.modalContent,{flexDirection: 'row'}]}>
                                 <View style={{justifyContent: 'space-between', padding: 10}}>
                                     <Text style={{fontSize: 20, fontWeight: '900'}}>Tổng tiền:</Text>
-                                    <Text style={{color: 'orange' , fontSize: 20, fontWeight: '500'}}>VND {tripPrice}</Text>
+                                    <Text style={{color: 'orange' , fontSize: 20, fontWeight: '500'}}>VND {moneyHandler.convertToVND(tripPrice)}</Text>
                                     <Text style={{fontStyle: 'italic', fontSize: 12}}>Đã bao gồm giá vé & thuế</Text>
                                 </View>
                                 <View style={[styles.continueButton]}>

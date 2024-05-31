@@ -1,21 +1,31 @@
 import { useEffect, useState } from "react";
-import { Text, View, TouchableOpacity, Image, StyleSheet, ScrollView, BackHandler } from "react-native";
-import bookingService from "../Services/bookingService";
+import { Text, View, TouchableOpacity, Image, StyleSheet, ScrollView, BackHandler, AppState } from "react-native";
+import bookingService from "../Services/bookingServices";
 import userService from "../Services/userServices";
 import timeHandler from "../module/timeHandler";
 import dateHandler from "../module/dateHandler";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React from "react";
 import billService from "../Services/billServices";
 import AwesomeAlert from "react-native-awesome-alerts";
+import { StackNavigation } from "../App";
+import Toast from "react-native-toast-message";
 
 
 function PayForTicket({ navigation, route} : any) {
+  const { navigate } = useNavigation<StackNavigation>();
+
     const [loggedUser, setLoggedUser] = useState(null);
     const [loggedUserName, setLoggedUserName] = useState(null);
     const [loggedUserId, setLoggedUserId] = useState(null);
     const [showAlert, setShowAlert] = useState(false);
+    const [showTimeoutAlert, setShowTimeoutAlert] = useState(false);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+    const [showLoading, setShowLoading] = useState(false);
+    const hideLoading = () => {
+        setShowLoading(false);
+    }
+    let countdownTimeout : any;
     const {tripId,
         departure, 
         departureDescriptions, 
@@ -34,7 +44,27 @@ function PayForTicket({ navigation, route} : any) {
         seatCode,
         billId } = route.params;
 
-    
+    const payButtonClick = () => {
+        navigation.navigate('PaymentSuccessful', {
+            tripId: tripId,
+            departure: departure,
+            departureDescriptions: departureDescriptions, 
+            departureTime: departureTime,
+            destination: destination,
+            destinationDescriptions: destinationDescriptions,
+            date: date,
+            tickets: tickets,
+            coachLicensePlate: coachLicensePlate,
+            driverName: driverName,
+            estimatedTime: estimatedTime,
+            tripPrice: tripPrice,
+            totalPrice: totalPrice,
+            guestName: guestName,
+            guestIdentifyNumber: guestIdentifyNumber,
+            seatCode: seatCode,
+            billId: billId,
+        });
+    }
     const getLoggedUser = async () => {
         const user = await userService.getUser();
             setLoggedUser(user);
@@ -50,25 +80,51 @@ function PayForTicket({ navigation, route} : any) {
                 return newBillId;  
             }
         } catch (error) {
-            console.log('Error adding bill:', error);
+            console.log('Error delete bill:', error);
             return null;
         }
     }
     const navigateToMain = () => {
-        navigation.navigate('Main');
+        navigate('Main');
+    }
+    const navigateToNext = () => {
+        navigation.navigate('PaymentSuccessful', {
+            tripId: tripId,
+            departure: departure,
+            departureDescriptions: departureDescriptions, 
+            departureTime: departureTime,
+            destination: destination,
+            destinationDescriptions: destinationDescriptions,
+            date: date,
+            tickets: tickets,
+            coachLicensePlate: coachLicensePlate,
+            driverName: driverName,
+            estimatedTime: estimatedTime,
+            tripPrice: tripPrice,
+            totalPrice: totalPrice,
+            guestName: guestName,
+            guestIdentifyNumber: guestIdentifyNumber,
+            seatCode: seatCode,
+            billId: billId,
+        });
     }
     const onBack = () => {
         console.log('onclick')
-        setShowAlert(true);
-        
+        setShowAlert(true);   
+    }
+    const onTimeout = () => {
+        setShowTimeoutAlert(true);
     }
     const hideAlert = () => {
         setShowAlert(false);
     }
+    const hideTimeoutAlert = () => {
+        setShowTimeoutAlert(false);
+    }
     const hideSuccessAlert = () => {
         setShowSuccessAlert(false);
     }
-    const onPayButton = () => {
+    const onPayButton = async() => {
         const userId = loggedUser ? loggedUser['_id'] : null;
         const dbDate = dateHandler.formatDBDate(date);
         const identifyNumber = guestIdentifyNumber;
@@ -76,12 +132,29 @@ function PayForTicket({ navigation, route} : any) {
         const arrivalDate = dateHandler .toTimeDate(departureTime, dbDate, estimatedTime);
         //console.log({userId, guestName, guestIdentifyNumber, tripId, departureTime, dbDate, departure, departureDescriptions,  destination, arrivalTime, arrivalDate });
         if(seatCode == "Không chọn") {
-            bookingService.bookTicket({userId, guestName, identifyNumber, tripId, departureTime, date, departure, departureDescriptions, destination, destinationDescriptions, estimatedTime, arrivalTime, arrivalDate, driverName, coachLicensePlate, billId })
+            await bookingService.bookTicket({userId, guestName, identifyNumber, tripId, departureTime, date, departure, departureDescriptions, destination, destinationDescriptions, estimatedTime, arrivalTime, arrivalDate, driverName, coachLicensePlate, billId })
         }
         else {
-            bookingService.bookSpecificTicket({userId, guestName, identifyNumber, tripId, seatCode, departureTime, date, departure, departureDescriptions, destination, destinationDescriptions, estimatedTime, arrivalTime, arrivalDate, driverName, coachLicensePlate, billId })
+            await bookingService.bookSpecificTicket({userId, guestName, identifyNumber, tripId, seatCode, departureTime, date, departure, departureDescriptions, destination, destinationDescriptions, estimatedTime, arrivalTime, arrivalDate, driverName, coachLicensePlate, billId })
         }
-        setShowSuccessAlert(true);
+        if (countdownTimeout) {
+            clearTimeout(countdownTimeout);
+        }
+        setShowLoading(true);
+        setTimeout( async() => {  
+        await billService.updateBill(billId, "FINISHED");
+        setShowLoading(false);
+        Toast.show({
+            type: 'success',
+            text1: 'Đặt vé thành công',
+            text2: 'Xem vé đã đặt ở mục vé của tôi',
+            visibilityTime: 5000,
+            topOffset: 15,
+        });
+        navigateToNext();
+      }, 2000)
+
+        
     }
     useEffect(() => {
         getLoggedUser();
@@ -100,8 +173,21 @@ function PayForTicket({ navigation, route} : any) {
           );
       
           // Cleanup listener khi component unmounts
-          return () => backHandler.remove();
-    }, []);  
+            countdownTimeout = setTimeout(() => {
+            onTimeout();
+            
+            //onBack();
+        }, 298000);  // 298000 seconds countdown
+
+        return () => {
+            backHandler.remove();
+            if (countdownTimeout) {
+                clearTimeout(countdownTimeout);
+            }
+        };
+          
+
+    }, []);
     return(
         <ScrollView style={{backgroundColor: 'white'}} contentContainerStyle={{ height: '100%'}}>
             <View style={[styles.header, {flexDirection: 'row'}]}>
@@ -111,6 +197,9 @@ function PayForTicket({ navigation, route} : any) {
                 <Text style={{fontSize: 20}}>Tiến hành thanh toán</Text>
             </View>
             <View style={{margin: 10, marginHorizontal: 15}}>
+            <Text style={{alignSelf: 'center', fontWeight: '900'}}>
+                    <Text style={{color: 'red'}}>*</Text> Quý khách có 5 phút để thực hiện thanh toán trước khi hóa đơn hết hiệu lực
+                </Text>
                 <Text style={{alignSelf: 'center', fontWeight: '900'}}>
                     <Text style={{color: 'red'}}>*</Text> Quý khách chuyển khoản theo hướng dẫn bên dưới
                 </Text>
@@ -179,14 +268,58 @@ function PayForTicket({ navigation, route} : any) {
           cancelText='Hủy'
           confirmButtonColor="#56e865"
           onCancelPressed={() => {
-            hideAlert();
+            
           }}
           onConfirmPressed={() => {
-            navigateToMain();
+            navigateToNext();
             hideSuccessAlert();
             
           }}
         />
+        <AwesomeAlert
+          messageStyle={styles.alertMessage}
+          
+          confirmButtonTextStyle={styles.confirmButtonText}
+          contentContainerStyle={{padding: 30}}
+          titleStyle={{fontSize: 30, fontWeight: 'bold', color: 'red'}}
+          show={showTimeoutAlert}
+          showProgress={true}
+          title="Thông báo"
+          message="Đã quá thời gian thực hiện thanh toán vui lòng tạo giao dịch mới"
+          closeOnTouchOutside={false}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          confirmText="Tiếp tục"
+          cancelText='Hủy'
+          confirmButtonColor="#56e865"
+          onCancelPressed={() => {
+            
+          }}
+          onConfirmPressed={() => {
+            navigation.goBack();
+            hideTimeoutAlert();
+            
+          }}
+        />
+        <AwesomeAlert
+          progressSize='30'
+          progressColor='#56e865'
+          show={showLoading}
+          showProgress={true}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={false}
+          confirmText="OK"
+          confirmButtonColor="#56e865"
+          onCancelPressed={() => {
+            hideLoading();
+          }}
+          onConfirmPressed={() => {
+            hideLoading();
+          }}
+        />  
         </ScrollView>
         
     )

@@ -37,8 +37,7 @@ const userController = {
           if (!isValidPassword) {
             return res.status(401).json({ message: 'Invalid password' });
           } else {
-          res.status(200).json(user
-          );
+          res.status(200).json(user);
           }
         } catch (error) {
           res.status(500).json({ message: error.message });
@@ -60,7 +59,30 @@ const userController = {
       } catch (error) {
         res.status(500).json({ message: error.message });
       }
-  },
+    },
+    getAnUserByEmail: async (req, res) => {
+      const { email } = req.body;
+      try {
+        const user = await User.findOne({ email : email });
+        res.status(200).json(user);
+      } catch (error) {
+        res.status(500).json({ message: error.message });
+      }
+    },
+    updateUser: async (req, res) => {
+      const { userId } = req.params;
+      const { username, email, password, name, phone, role } = req.body;
+      try {
+        const updatedUser = await User.findByIdAndUpdate(userId, { username, email, password, name, phone, role }, {new : true});
+        if(!updatedUser) {
+          res.status(404).json({ message: 'user can not be updated' });
+        }
+        res.status(200).json(updatedUser);
+      }
+      catch (error) {
+        res.status(500).json({ message: error.message });
+      }
+    }
     
 }
 

@@ -11,6 +11,8 @@ import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.flipper.ReactNativeFlipper
 import com.facebook.soloader.SoLoader
+import com.christopherdro.htmltopdf.RNHTMLtoPDFPackage;
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
 
 class MainApplication : Application(), ReactApplication {
 
@@ -20,6 +22,9 @@ class MainApplication : Application(), ReactApplication {
             PackageList(this).packages.apply {
               // Packages that cannot be autolinked yet can be added manually here, for example:
               // add(MyReactNativePackage())
+                //add(MainReactPackage()); //tự
+                //add(RNHTMLtoPDFPackage()) //tự
+                 add(SplashScreenReactPackage())
             }
 
         override fun getJSMainModuleName(): String = "index"

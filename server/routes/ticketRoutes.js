@@ -8,7 +8,7 @@ router.post('/', ticketController.addTicket);
 // GET: Lấy danh sách tất cả danh mục
 router.get('/', ticketController.getAllTickets);
 
-router.get('/available-tickets', ticketController.findAvailableTickets);
+router.get('/available-tickets/:tripId', ticketController.findAvailableTicketOfTrip);
 
 router.get('/findtrip/:ticketId', ticketController.findTripByTicketId);
 

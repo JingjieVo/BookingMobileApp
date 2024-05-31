@@ -9,5 +9,7 @@ router.post('/', driverController.addDriver);
 // Route để lấy danh sách tất cả tài xế
 router.get('/', driverController.getAllDrivers);
 
+router.delete('/delete', driverController.deleteDriver)
+
 module.exports = router;
 

@@ -2,10 +2,14 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Homescreen from './Home';
 import Searchscreen from './SearchTickets';
 import MyTicketsscreen from './MyTickets';
+import Testpage from './testPage';
+
+import LoggedMyTicketsscreen from './LoggedMyTickets'
+
 import Profilescreen from './Profile';
 import LoggedProfilescreen from './LoggedProfile';
 
-
+import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -20,8 +24,10 @@ function Main() {
   const getLoggedUser = async () => {
     const user = await userDAO.getUser();
     setLoggedUser(user);
+
   }
   useEffect(() => {
+
     // Gọi hàm để lấy tất cả các địa điểm khi component được render
     getLoggedUser();
   }, []);
@@ -68,7 +74,7 @@ function Main() {
             ) 
           }}
         />
-        <Tab.Screen name="MyTickets" component={MyTicketsscreen} 
+        <Tab.Screen name="MyTickets" component={!loggedUser ? MyTicketsscreen : LoggedMyTicketsscreen} 
           options={{
             tabBarShowLabel: false,
             //tabBarLabel: 'My Tickets',
@@ -99,7 +105,7 @@ function Main() {
 const styles = StyleSheet.create({
   focusedTab: {
     fontSize : 30,
-    color: '#56e865',
+    color: '#1CA653',
     paddingHorizontal: 10,
     padding: 5,
 
@@ -111,7 +117,7 @@ const styles = StyleSheet.create({
     fontSize : 30,
   },
   focusedText: {
-    color: '#56e865',
+    color: '#1CA653',
     fontWeight: '900',
     alignSelf: 'center',
     fontSize: 15
