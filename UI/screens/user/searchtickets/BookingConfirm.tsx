@@ -3,18 +3,18 @@ import { NavigationContainer, useFocusEffect, useNavigation } from '@react-navig
 import { Divider } from '@rneui/base';
 import { Dimensions, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome6';
-import timeHandler from '../module/timeHandler';
-import dateHandler from '../module/dateHandler';
-import {type StackNavigation } from '../App';
+import timeHandler from '../../../module/timeHandler';
+import dateHandler from '../../../module/dateHandler';
+import {type StackNavigation } from '../../../App';
 import { useEffect, useState } from 'react';
-import Seat from '../components/seat';
-import Trip from '../components/trip';
+import Seat from '../../../components/seat';
+import Trip from '../../../components/trip';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import React from 'react';
-import trip from '../Services/tripServices';
-import billService from '../Services/billServices';
-import userService from '../Services/userServices';
-import moneyHandler from "../module/moneyHandler";
+import trip from '../../../Services/tripServices';
+import billService from '../../../Services/billServices';
+import userService from '../../../Services/userServices';
+import moneyHandler from "../../../module/moneyHandler";
 
 const seats = [
     {

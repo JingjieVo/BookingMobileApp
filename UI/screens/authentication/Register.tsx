@@ -3,10 +3,10 @@ import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Modal, Key
 import { Divider } from 'react-native-paper';
 import { NavigationContainer, NavigationProp, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { type StackNavigation } from "../App";
-import Main from './Main';
+import { type StackNavigation } from "../../App";
+import Main from '../Main';
 import Icon from 'react-native-vector-icons/FontAwesome6';
-import userService from '../Services/userServices';
+import userService from '../../Services/userServices';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import Toast from 'react-native-toast-message';
 function Register({navigation} : any) {

@@ -1,18 +1,18 @@
 
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { Image, Modal, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Ticket from '../components/ticket';
+import Ticket from '../../components/ticket';
 import { useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome6';
-import dateHandler from '../module/dateHandler';
-import timeHandler from '../module/timeHandler';
-import pdfGenerator from '../module/pdfGenerator';
+import dateHandler from '../../module/dateHandler';
+import timeHandler from '../../module/timeHandler';
+import pdfGenerator from '../../module/pdfGenerator';
 import { Divider } from '@rneui/base';
-import bookingService from '../Services/bookingServices';
-import userService from '../Services/userServices';
+import bookingService from '../../Services/bookingServices';
+import userService from '../../Services/userServices';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import AwesomeAlert from 'react-native-awesome-alerts';
-import { StackNavigation } from '../App';
+import { StackNavigation } from '../../App';
 
 const props: any[] = [
   {

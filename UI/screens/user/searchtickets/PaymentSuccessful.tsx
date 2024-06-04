@@ -3,10 +3,10 @@ import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Modal, Key
 import { Divider } from 'react-native-paper';
 import { NavigationContainer, NavigationProp, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { type StackNavigation } from "../App";
+import { type StackNavigation } from "../../../App";
 import Icon from 'react-native-vector-icons/FontAwesome6';
-import moneyHandler from '../module/moneyHandler';
-import timeHandler from '../module/timeHandler';
+import moneyHandler from '../../../module/moneyHandler';
+import timeHandler from '../../../module/timeHandler';
 function PaymentSuccessful({ navigation, route } : any) {
   const { navigate } = useNavigation<StackNavigation>();
   const [showLoading, setShowLoading] = useState(false);

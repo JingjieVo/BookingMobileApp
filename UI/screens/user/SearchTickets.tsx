@@ -2,18 +2,20 @@
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { Image, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import dateHandler from '../module/dateHandler';
+import dateHandler from '../../module/dateHandler';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon1 from 'react-native-vector-icons/MaterialIcons';
+import Icon2 from 'react-native-vector-icons/FontAwesome6';
 import React, { useEffect, useState } from 'react';
 import { getFormatedDate } from 'react-native-modern-datepicker';
-import { StackNavigation } from '../App';
+import { StackNavigation } from '../../App';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import DatePicker from 'react-native-modern-datepicker'
 import { Divider } from '@rneui/base';
-import Location from '../components/location';
+import Location from '../../components/location';
 import { SliderBox } from 'react-native-image-slider-box'
-import locationService from '../Services/locationServices';
+import locationService from '../../Services/locationServices';
+import { Dropdown } from 'react-native-element-dropdown';
 
 
 
@@ -35,6 +37,8 @@ function Home({ navigation } : any) {
   const [showLoading, setShowLoading] = useState(false);
   const { navigate } = useNavigation<StackNavigation>();
   const [ searchHistories, setSearchHistories ] = useState<any[]>([]);
+  const [isToFocus, setIsToFocus] = useState(false);
+  const [isFromFocus, setIsFromFocus] = useState(false);
 
 
 
@@ -113,7 +117,9 @@ function Home({ navigation } : any) {
         })
       }, 1000)
   }
-  
+  const onNavigateToSaleNews = () => {
+    navigation.navigate('Page1')
+  }
   useEffect(() => {
     // Gọi hàm để lấy tất cả các địa điểm khi component được render
     const fetchLocations = async () => {
@@ -140,23 +146,68 @@ function Home({ navigation } : any) {
         <View style={styles.contentOverlayView}>
         <Text style={{fontSize: 20, marginBottom: 20, fontWeight: '900', color: '#F7941D'}}>TÌM VÀ ĐẶT VÉ</Text>
         <View style= {{flexDirection: 'row', marginHorizontal: 10}}>
-          <View  style={{flex: 6, alignSelf: 'center'}}>
-            <View style={{flexDirection: 'row', marginBottom: 15, marginRight: 10}}>
-              <Icon name="location-outline" color="#1CA653" style={{fontSize: 30, color: '#1CA653', fontWeight: '900', alignSelf: 'center'}}/>
-              <TouchableOpacity style={styles.textInput} onPress={() => setIsDepartureModalVisible(true)}>
-                <Text style={{fontWeight: '900', color: '#1CA653'}}>Điểm đi:      <Text style={{fontWeight: '900', color: '#7fd7f4', fontSize: 14}}>{choosenDeparture}</Text></Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{flexDirection: 'row', marginBottom: 15, marginRight: 10}}>
-              <Icon name="location-sharp" color="#1CA653" style={{fontSize: 30, color: '#1CA653', fontWeight: '900', alignSelf: 'center'}}/>
-              <TouchableOpacity style={styles.textInput} onPress={() => setIsDestinationModalVisible(true)}>
-                <Text style={{fontWeight: '900', color: '#1CA653'}}>Điểm đến:    <Text style={{fontWeight: '900', color: '#7fd7f4', fontSize: 14}}>{choosenDestination}</Text></Text>
-              </TouchableOpacity>
-            </View>
+          <View style={{flex: 6, marginBottom: 15}}>
+          <View  style={{flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginBottom: 15,}}>
+            <Icon2 style={{flex: 1, fontSize: 30}} color="#F7941D" name="location-dot"></Icon2>
+          <Dropdown
+          style={[styles.dropdown, isFromFocus && { borderColor: '#F7941D' }]}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          inputSearchStyle={styles.inputSearchStyle}
+          iconStyle={styles.iconStyle}
+          itemTextStyle={[styles.placeholderStyle, { color: "#F7941D"}]}
+          containerStyle={[{borderRadius: 15, width: 200, borderWidth: 2, borderColor: '#F7941D'}]}
+          iconColor="#1CA653"
+          data={locations}
+          search
+          maxHeight={300}
+          labelField="name"
+          valueField="_id"
+          placeholder={(!isFromFocus && choosenDeparture=='') ? 'Chọn điểm đi' : choosenDeparture}
+          searchPlaceholder="Tìm địa điểm..."
+          value={choosenDeparture}
+          onFocus={() => setIsFromFocus(true)}
+          onBlur={() => setIsFromFocus(false)}
+          onChange={item => {
+            setChoosenDeparture(item.name);
+            setDepartureDescriptions(item.description)
+            setIsFromFocus(false);
+          }}
+          
+        />
+        </View>
+        <View style={{flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center'}}>
+          <Icon2 style={{flex: 1, fontSize: 30}} color="#F7941D" name="location-pin"></Icon2>
+        <Dropdown
+          style={[styles.dropdown, isToFocus && { borderColor: '#F7941D' }]}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          inputSearchStyle={styles.inputSearchStyle}
+          iconStyle={styles.iconStyle}
+          iconColor="#1CA653"
+          itemTextStyle={[styles.placeholderStyle, { color: "#F7941D"}]}
+          containerStyle={[{borderRadius: 15, width: 200, borderWidth: 2, borderColor: '#F7941D'}]}
+          data={locations}
+          search
+          maxHeight={300}
+          labelField="name"
+          valueField="_id"
+          placeholder={(!isToFocus && choosenDestination=='') ? 'Chọn điểm đến' : choosenDestination}
+          searchPlaceholder="Tìm địa điểm..."
+          value={choosenDestination}
+          onFocus={() => setIsToFocus(true)}
+          onBlur={() => setIsToFocus(false)}
+          onChange={item => {
+            setChoosenDestination(item.name);
+            setDestinationDescriptions(item.description)
+            setIsToFocus(false);
+          }}
+        />
+          </View>
           </View>
           <View style={{flex: 2, alignSelf: 'center', marginLeft: 10}}>
-            <TouchableOpacity onPress={ExChangeLocation} style={{borderRadius: 50, backgroundColor: 'transparent', padding: 15}}>
-              <Icon1 name="change-circle" color="#5c7cd6" style={{fontSize: 30, color: '#1CA653', fontWeight: '600', alignSelf: 'center'}}/>
+            <TouchableOpacity onPress={ExChangeLocation} style={{borderRadius: 50, backgroundColor: 'transparent', padding: 10}}>
+              <Icon1 name="change-circle" color="#5c7cd6" style={{fontSize: 40, color: '#1CA653', fontWeight: '600', alignSelf: 'center', marginBottom: 15, right: 10}}/>
             </TouchableOpacity>
           </View>
         </View>
@@ -174,7 +225,7 @@ function Home({ navigation } : any) {
       </View>
       <View style={[styles.subContent]}>
           <Text style={{fontSize: 20,fontWeight: '800', color: "#F7941D", marginLeft: 20}}>Khuyến mãi gần đây</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={onNavigateToSaleNews}>
               <Image
               style={styles.newsImage}
               source={require('../assets/img/a2.png')}
@@ -473,7 +524,48 @@ const styles = StyleSheet.create({
     width: '98%',
     alignSelf: 'center',
     borderRadius: 10,
-  }
+  },
+  dropdown: {
+    flex: 4,
+    height: 45,
+    borderColor: '#1CA653',
+    borderWidth:2,
+    borderRadius: 15,
+    paddingHorizontal: 8,
+  },
+  icon: {
+    marginRight: 15,
+  },
+  label: {
+    color: '#1CA653',
+    position: 'absolute',
+    backgroundColor: 'white',
+    width: 200,
+    left: 22,
+    top: 8,
+    zIndex: 999,
+    paddingHorizontal: 8,
+    fontSize: 14,
+  },
+  placeholderStyle: {
+    color: '#1CA653',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    color: 'black',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    borderRadius: 10,
+    height: 40,
+    fontSize: 16,
+  },
 });
 
 export default Home;

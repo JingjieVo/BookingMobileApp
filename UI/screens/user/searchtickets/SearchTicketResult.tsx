@@ -1,18 +1,18 @@
 
 import { NavigationContainer, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity, Modal  } from 'react-native';
-import { type StackNavigation } from "../App";
-import moneyHandler from "../module/moneyHandler";
+import { type StackNavigation } from "../../../App";
+import moneyHandler from "../../../module/moneyHandler";
 
 import Icon from 'react-native-vector-icons/FontAwesome6';
-import Trip from '../components/trip';
+import Trip from '../../../components/trip';
 import { Divider } from '@rneui/base';
-import dateHandler from '../module/dateHandler'
-import timeHandler from '../module/timeHandler';
+import dateHandler from '../../../module/dateHandler'
+import timeHandler from '../../../module/timeHandler';
 import { useEffect, useState } from 'react';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import React from 'react';
-import tripDataGetter from '../Services/tripServices';
+import tripDataGetter from '../../../Services/tripServices';
 
 const trips1: any[] = [
     {

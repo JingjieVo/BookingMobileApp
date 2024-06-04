@@ -3,16 +3,16 @@ import { NavigationContainer, useFocusEffect, useNavigation } from '@react-navig
 import { Divider } from '@rneui/base';
 import { Dimensions, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome6';
-import timeHandler from '../module/timeHandler';
-import dateHandler from '../module/dateHandler';
-import {type StackNavigation } from '../App';
+import timeHandler from '../../../module/timeHandler';
+import dateHandler from '../../../module/dateHandler';
+import {type StackNavigation } from '../../../App';
 import { useState } from 'react';
-import Seat from '../components/seat';
-import Trip from '../components/trip';
+import Seat from '../../../components/seat';
+import Trip from '../../../components/trip';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import React from 'react';
-import tripDataGetter from '../Services/tripServices';
-import moneyHandler from "../module/moneyHandler";
+import tripDataGetter from '../../../Services/tripServices';
+import moneyHandler from "../../../module/moneyHandler";
 
 const seats = [
     {
