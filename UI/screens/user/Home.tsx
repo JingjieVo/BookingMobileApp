@@ -2,27 +2,27 @@
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { Dimensions, Image, Modal, Platform, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View, useColorScheme, Alert } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import dateHandler from '../module/dateHandler';
+import dateHandler from '../../module/dateHandler';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import React, { useEffect, useState } from 'react';
-import locationDataGetter from '../Services/locationServices';
+import locationDataGetter from '../../Services/locationServices';
 import { getFormatedDate } from 'react-native-modern-datepicker';
-import { StackNavigation } from '../App';
+import { StackNavigation } from '../../App';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import DatePicker from 'react-native-modern-datepicker'
 import { Divider } from '@rneui/base';
-import Location from '../components/location';
+import Location from '../../components/location';
 import { SliderBox } from 'react-native-image-slider-box';
-import userService from '../Services/userServices';
+import userService from '../../Services/userServices';
 
 
 
 const saleSliderImages = [
-  require('../assets/img/a1.png'),
-  require('../assets/img/a2.png'),
-  require('../assets/img/a3.png'),
-  require('../assets/img/a4.png'),
+  require('../../assets/img/a1.png'),
+  require('../../assets/img/a2.png'),
+  require('../../assets/img/a3.png'),
+  require('../../assets/img/a4.png'),
   
 ]
 export default function Home({navigation} : any) {

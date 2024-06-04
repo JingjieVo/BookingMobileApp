@@ -1,7 +1,7 @@
 
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native';
-import { type StackNavigation } from "../App";
+import { type StackNavigation } from "../../App";
 import { Button } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { FlatList } from 'react-native-gesture-handler';

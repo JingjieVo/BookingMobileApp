@@ -1,7 +1,7 @@
 
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native';
-import { type StackNavigation } from "../App";
+import { type StackNavigation } from "../../App";
 import { Button } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -9,7 +9,7 @@ import Icon2 from 'react-native-vector-icons/FontAwesome6';
 import Toast from 'react-native-toast-message';
 import { FlatList } from 'react-native-gesture-handler';
 import { Divider } from '@rneui/themed';
-import userDAO from '../Services/userServices';
+import userDAO from '../../Services/userServices';
 import { useEffect, useState } from 'react';
 import AwesomeAlert from 'react-native-awesome-alerts';
 

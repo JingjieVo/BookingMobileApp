@@ -1,13 +1,13 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Homescreen from './Home';
-import Searchscreen from './SearchTickets';
-import MyTicketsscreen from './MyTickets';
+import Homescreen from './user/Home';
+import Searchscreen from './user/SearchTickets';
+import MyTicketsscreen from './unauthentication/MyTickets';
 import Testpage from './testPage';
 
-import LoggedMyTicketsscreen from './LoggedMyTickets'
+import LoggedMyTicketsscreen from './user/LoggedMyTickets'
 
-import Profilescreen from './Profile';
-import LoggedProfilescreen from './LoggedProfile';
+import Profilescreen from './unauthentication/Profile';
+import LoggedProfilescreen from './user/LoggedProfile';
 
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';

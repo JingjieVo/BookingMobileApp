@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { Text, View, TouchableOpacity, Image, StyleSheet, ScrollView, BackHandler, AppState } from "react-native";
-import bookingService from "../Services/bookingServices";
-import userService from "../Services/userServices";
-import timeHandler from "../module/timeHandler";
-import dateHandler from "../module/dateHandler";
+import bookingService from "../../../Services/bookingServices";
+import userService from "../../../Services/userServices";
+import timeHandler from "../../../module/timeHandler";
+import dateHandler from "../../../module/dateHandler";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React from "react";
-import billService from "../Services/billServices";
+import billService from "../../../Services/billServices";
 import AwesomeAlert from "react-native-awesome-alerts";
-import { StackNavigation } from "../App";
+import { StackNavigation } from "../../../App";
 import Toast from "react-native-toast-message";
 
 
